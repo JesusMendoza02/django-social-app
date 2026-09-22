@@ -1,0 +1,58 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Virtual environments
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Distribution / packaging
+*.egg
+*.egg-info/
+dist/
+build/
+*.whl
+
+# Django stuff
+*.log
+*.pot
+*.pyc
+*.mo
+*.db
+*.sqlite3
+*.sqlite3-journal
+
+# Carpeta de medios (fotos subidas por usuarios)
+media/
+media/fotos_resenas/
+media/fotos_perfil/
+
+# Static files generados automáticamente
+staticfiles/
+
+# Environment variables
+.env
+
+# IDEs y editores
+.idea/
+.vscode/
+
+# MacOS
+.DS_Store
+
+# Logs y temporales
+*.log
+*.out
+*.tmp
+*.swp
+*.swo
+
+# Node.js (si usas frontend con npm)
+node_modules/

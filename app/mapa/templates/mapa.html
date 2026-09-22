@@ -1,0 +1,350 @@
+{% extends "base_feed.html" %}
+{% block contenido %}
+
+<!-- Botón de regresar -->
+<div class="container-fluid px-3 px-md-4 pt-3">
+    <a href="javascript:history.back()" 
+       class="btn btn-regresar d-inline-flex align-items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+        </svg>
+        <span class="d-none d-sm-inline">Regresar</span>
+    </a>
+</div>
+
+<h2 class="text-center mb-4 mt-3">Ruta hacia {{ lugar.nombre }}</h2>
+
+<div class="container mb-3">
+
+    <!-- Botón de ubicación actual -->
+    <div class="text-center mb-3">
+        <button id="btn-ubicacion"
+            class="btn shadow-sm px-4 py-2"
+            style="
+                background-color: #524f7d !important;
+                border-color: #524f7d !important;
+                color: white !important;
+                font-weight: 600;
+                border-radius: 10px;
+                transition: all 0.25s ease-in-out;
+            ">
+            Usar mi ubicación actual
+        </button>
+    </div>
+
+
+    <!-- Input de dirección manual -->
+    <div class="text-center mb-3">
+        <label for="direccion-input" class="form-label fw-bold">Ingresa tu ubicación:</label>
+        <input type="text" id="direccion-input" class="form-control w-75 mx-auto"
+               placeholder="Ejemplo: Calle Hidalgo 321, Centro, Zacatecas" autocomplete="off">
+    </div>
+
+    <!-- Transporte -->
+    <div class="text-center my-3">
+        <label for="modo-viaje" class="form-label fw-bold">Selecciona tipo de transporte:</label>
+        <select id="modo-viaje" class="form-select w-auto d-inline-block shadow-sm">
+            <option value="">-- Selecciona --</option>
+            <option value="DRIVING">🚗 En automóvil</option>
+            <option value="WALKING">🚶‍♂️ Caminando</option>
+            <option value="BICYCLING">🚴 En bicicleta</option>
+        </select>
+    </div>
+
+    <!-- Distancia y tiempo -->
+    <div id="info-ruta"
+         class="text-center fw-bold mb-3"
+         style="display:none; font-size:1.1rem; color:#444;"></div>
+</div>
+
+<div id="mapa"
+     style="height: 600px; width: 90%; margin: 0 auto; border: 2px solid #ddd; border-radius: 8px;">
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+let mapa, directionsService, directionsRenderer;
+let origen = null;
+let destino = { lat: {{ lugar.latitud }}, lng: {{ lugar.longitud }} };
+let autocomplete;
+let modoTransporte = ""; // Variable para guardar el modo de transporte actual
+
+// ================================
+// LIMITAR SOLO A ZACATECAS CAPITAL
+// ================================
+const boundsZacatecas = {
+    north: 22.86,
+    south: 22.70,
+    east: -102.49,
+    west: -102.63
+};
+
+// ================================
+// INIT MAP
+// ================================
+window.initMap = function () {
+    mapa = new google.maps.Map(document.getElementById("mapa"), {
+        zoom: 14,
+        center: destino,
+        mapTypeControl: false,     
+        streetViewControl: false,   
+        fullscreenControl: false,    
+        zoomControl: true 
+    });
+
+    directionsService = new google.maps.DirectionsService();
+    directionsRenderer = new google.maps.DirectionsRenderer({
+        suppressMarkers: false
+    });
+    directionsRenderer.setMap(mapa);
+
+    new google.maps.Marker({
+        position: destino,
+        map: mapa,
+        title: "{{ lugar.nombre }}"
+    });
+
+    // Autocomplete restringido
+    autocomplete = new google.maps.places.Autocomplete(
+        document.getElementById("direccion-input"),
+        {
+            bounds: boundsZacatecas,
+            strictBounds: true,
+            componentRestrictions: { country: "mx" },
+            fields: ["geometry", "formatted_address"]
+        }
+    );
+
+    autocomplete.addListener("place_changed", async () => {
+        const place = autocomplete.getPlace();
+
+        if (!place.geometry) {
+            Swal.fire("Ups...", "No se encontró esa ubicación.", "warning");
+            return;
+        }
+
+        origen = {
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng()
+        };
+
+        // Reiniciar transporte y limpiar ruta
+        modoTransporte = "";
+        document.getElementById("modo-viaje").value = "";
+        document.getElementById("info-ruta").style.display = "none";
+        directionsRenderer.setDirections({routes: []});
+
+        // Mostrar mensaje para elegir transporte
+        Swal.fire({
+            icon: "success",
+            title: "Ubicación lista",
+            text: "Ahora elige un tipo de transporte.",
+            confirmButtonText: "OK",
+            confirmButtonColor: "#524f7d"
+        });
+    });
+};
+
+
+// ================================
+// BOTÓN: USAR UBICACIÓN ACTUAL
+// ================================
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("btn-ubicacion").addEventListener("click", () => {
+
+        Swal.fire({
+            title: "Obteniendo ubicación...",
+            text: "Por favor espera un momento",
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading()
+        });
+
+        if (!navigator.geolocation) {
+            Swal.fire("Error", "Tu navegador no soporta GPS.", "error");
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                origen = {
+                    lat: pos.coords.latitude,
+                    lng: pos.coords.longitude
+                };
+
+                // Reiniciar transporte y limpiar ruta
+                modoTransporte = "";
+                document.getElementById("modo-viaje").value = "";
+                document.getElementById("info-ruta").style.display = "none";
+                directionsRenderer.setDirections({routes: []});
+
+                // Mostrar mensaje para elegir transporte
+                Swal.fire({
+                    icon: "success",
+                    title: "Listo",
+                    text: "Ahora elige un tipo de transporte.",
+                    confirmButtonText: "OK",
+                    confirmButtonColor: "#524f7d"
+                });
+            },
+            () => Swal.fire("Error", "No se pudo obtener tu ubicación.", "error"),
+            {
+                enableHighAccuracy: true,
+                timeout: 8000,
+                maximumAge: 0
+            }
+        );
+    });
+
+    // Seleccionar modo de transporte
+    document.getElementById("modo-viaje").addEventListener("change", async (e) => {
+        const modo = e.target.value;
+
+        if (!modo) return;
+
+        // Guardar el modo de transporte seleccionado
+        modoTransporte = modo;
+
+        // Si no hay origen aún, intentar geocodificar texto
+        if (!origen) {
+            const texto = document.getElementById("direccion-input").value.trim();
+            if (!texto) {
+                // Reiniciar todo si no hay ubicación
+                modoTransporte = "";
+                document.getElementById("modo-viaje").value = "";
+                document.getElementById("info-ruta").style.display = "none";
+                directionsRenderer.setDirections({routes: []});
+                
+                Swal.fire({
+                    icon: "warning",
+                    title: "Falta tu ubicación",
+                    text: "Ingresa una dirección o usa el GPS.",
+                    confirmButtonText: "OK",
+                    confirmButtonColor: "#524f7d"
+                });
+                return;
+            }
+
+            origen = await geocodificarDireccion(texto);
+            if (!origen) {
+                // Reiniciar todo si no se encontró la dirección
+                modoTransporte = "";
+                document.getElementById("modo-viaje").value = "";
+                document.getElementById("info-ruta").style.display = "none";
+                directionsRenderer.setDirections({routes: []});
+                
+                Swal.fire({
+                    icon: "error",
+                    title: "No encontrado",
+                    text: "No se pudo ubicar esa dirección dentro de Zacatecas capital.",
+                    confirmButtonText: "OK",
+                    confirmButtonColor: "#524f7d"
+                });
+                return;
+            }
+        }
+
+        // Calcular ruta sin mostrar mensaje
+        calcularRuta(modo);
+    });
+});
+
+
+// ================================
+// GEOCODIFICAR DIRECCIÓN — SOLO ZACATECAS CAPITAL
+// ================================
+async function geocodificarDireccion(texto) {
+
+    const direccion = `${texto}, Zacatecas, Zacatecas, México`;
+
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+        direccion
+    )}&bounds=22.86,-102.63|22.70,-102.49&key={{ api_key }}`;
+
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (data.status !== "OK") return null;
+
+    const result = data.results[0];
+
+    // Evitar Guadalupe, Morelos, Vetagrande, etc.
+    if (!result.formatted_address.toLowerCase().includes("zacatecas")) {
+        return null;
+    }
+
+    return result.geometry.location;
+}
+
+
+// ================================
+// CALCULAR RUTA
+// ================================
+function calcularRuta(modo) {
+    directionsService.route(
+        {
+            origin: origen,
+            destination: destino,
+            travelMode: google.maps.TravelMode[modo]
+        },
+        (response, status) => {
+            if (status === "OK") {
+                directionsRenderer.setDirections(response);
+
+                const leg = response.routes[0].legs[0];
+
+                document.getElementById("info-ruta").innerHTML =
+                    `🛣️ <b>${leg.distance.text}</b> — ⏱️ <b>${leg.duration.text}</b>`;
+
+                document.getElementById("info-ruta").style.display = "block";
+            } else {
+                Swal.fire("Error", "No se pudo calcular la ruta: " + status, "error");
+            }
+        }
+    );
+}
+
+</script>
+
+<style>
+#btn-ubicacion:hover {
+    background-color: #3f3d56 !important; /* TU COLOR PRINCIPAL */
+    border-color: #3f3d56 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(63, 61, 86, 0.35);
+}
+
+.btn-regresar {
+    background-color: #524f7d;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-shadow: 0 2px 6px rgba(82, 79, 125, 0.3);
+}
+
+.btn-regresar:hover {
+    background-color: #3f3d56;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(63, 61, 86, 0.4);
+}
+
+.btn-regresar:active {
+    transform: translateY(0);
+}
+
+/* Responsivo - en móviles solo muestra el ícono */
+@media (max-width: 576px) {
+    .btn-regresar {
+        padding: 0.5rem 0.75rem;
+        min-width: 40px;
+    }
+}
+</style>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&libraries=places&callback=initMap" async defer></script>
+
+{% endblock %}

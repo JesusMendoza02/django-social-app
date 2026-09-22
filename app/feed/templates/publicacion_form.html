@@ -1,0 +1,512 @@
+{% extends "base_feed.html" %}
+{% block titulo %}Publicar Reseña{% endblock %}
+
+{% block contenido %}
+<h2 class="text-center mb-4" style="color: #3f3d56;">Publicar Reseña</h2>
+
+<form method="POST" enctype="multipart/form-data" id="form-resena" novalidate>
+    {% csrf_token %}
+
+    <!-- Lugar turístico con autocompletado -->
+    <div class="mb-3">
+        <label for="busqueda-lugar" class="form-label">Lugar Turístico</label>
+        <div class="autocomplete-wrapper" style="position: relative;">
+            <input 
+                type="text" 
+                id="busqueda-lugar" 
+                class="form-control" 
+                placeholder="Buscar lugar en Zacatecas..."
+                autocomplete="off"
+            >
+            <div id="resultados-busqueda" class="autocomplete-results"></div>
+        </div>
+        
+        <!-- Campo oculto con el ID del lugar seleccionado -->
+        <input type="hidden" name="lugar_turistico" id="lugar_turistico_id">
+        
+        <!-- Campos ocultos para datos de nuevo lugar -->
+        <input type="hidden" name="nuevo_lugar_nombre" id="nuevo_lugar_nombre">
+        <input type="hidden" name="nuevo_lugar_ubicacion" id="nuevo_lugar_ubicacion">
+        <input type="hidden" name="nuevo_lugar_place_id" id="nuevo_lugar_place_id">
+        <input type="hidden" name="nuevo_lugar_latitud" id="nuevo_lugar_latitud">
+        <input type="hidden" name="nuevo_lugar_longitud" id="nuevo_lugar_longitud">
+        <input type="hidden" name="nuevo_lugar_tipos" id="nuevo_lugar_tipos">
+        
+        <small class="text-muted">
+            <i class="bi bi-info-circle"></i> Escribe al menos 3 letras para buscar
+        </small>
+        <small class="text-danger d-none error-msg">Selecciona un lugar de la lista</small>
+        {% if form_resena.lugar_turistico.errors %}
+            <div class="text-danger small">{{ form_resena.lugar_turistico.errors }}</div>
+        {% endif %}
+    </div>
+
+    <!-- Descripción -->
+    <div class="mb-3">
+        {{ form_resena.descripcion.label_tag }}
+        {{ form_resena.descripcion }}
+        <small class="text-danger d-none error-msg">Rellena este campo</small>
+        {% if form_resena.descripcion.errors %}
+            <div class="text-danger small">{{ form_resena.descripcion.errors }}</div>
+        {% endif %}
+    </div>
+
+    <!-- Calificación -->
+    <div class="mb-3">
+        {{ form_resena.calificacion.label_tag }}
+        {{ form_resena.calificacion }}
+        <small class="text-danger d-none error-msg">Rellena este campo</small>
+        {% if form_resena.calificacion.errors %}
+            <div class="text-danger small">{{ form_resena.calificacion.errors }}</div>
+        {% endif %}
+    </div>
+
+    <!-- ¿Actualmente en el lugar? -->
+    <div class="mb-3">
+        {{ form_resena.actualmente_en_lugar.label_tag }}
+        <div>
+            {% for radio in form_resena.actualmente_en_lugar %}
+                <label style="margin-right: 20px;">
+                    {{ radio.tag }} {{ radio.choice_label }}
+                </label>
+            {% endfor %}
+        </div>
+        <small class="text-danger d-none error-msg">Rellena este campo</small>
+        {% if form_resena.actualmente_en_lugar.errors %}
+            <div class="text-danger small">{{ form_resena.actualmente_en_lugar.errors }}</div>
+        {% endif %}
+    </div>
+
+    <!-- Fecha y hora manual (inicialmente oculto) -->
+    <div class="mb-3" id="fecha_hora_input" style="display:none;">
+        {{ form_resena.fecha_visita_manual.label_tag }}
+        {{ form_resena.fecha_visita_manual }}
+        <small class="text-danger d-none error-msg">Rellena este campo</small>
+        {% if form_resena.fecha_visita_manual.errors %}
+            <div class="text-danger small">{{ form_resena.fecha_visita_manual.errors }}</div>
+        {% endif %}
+    </div>
+
+    <!-- Fotografías -->
+    <div class="mb-3">
+        <label class="form-label">Fotografías (máximo 3)</label>
+        <div class="upload-area" id="upload-area">
+            <input type="file" id="id_fotografias" name="fotografias" accept="image/*" multiple style="display:none;">
+            <div class="upload-button" id="upload-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 3.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5z"/>
+                    <path d="M8 0a1 1 0 0 1 1 1v5.268l1.634-1.634a1 1 0 1 1 1.414 1.414l-3.5 3.5a1 1 0 0 1-1.415 0l-3.5-3.5a1 1 0 0 1 1.414-1.414L7 6.268V1a1 1 0 0 1 1-1z"/>
+                    <path d="M2 9.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
+                    <path d="M2.5 11a.5.5 0 0 0-.5.5v2a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 0-.5-.5h-11z"/>
+                </svg>
+                <p class="mb-0 mt-2" style="color: #3f3d56; font-weight: 500;">Seleccionar imágenes</p>
+                <small style="color: #666;">Haz clic para elegir hasta 3 fotos</small>
+            </div>
+        </div>
+        <div id="preview-container" class="mt-3"></div>
+        {% if form_resena.fotografias.errors %}
+            <div class="text-danger small">{{ form_resena.fotografias.errors }}</div>
+        {% endif %}
+    </div>
+
+    {% if form_resena.non_field_errors %}
+        <div class="alert alert-danger">
+            {{ form_resena.non_field_errors }}
+        </div>
+    {% endif %}
+
+    <button type="submit" class="btn w-100"
+        style="background-color:#3f3d56;color:white;border-radius:12px;padding:0.8rem;font-weight:600;">
+        Publicar
+    </button>
+</form>
+
+<style>
+.autocomplete-wrapper {
+    position: relative;
+}
+
+.autocomplete-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: none;
+}
+
+.autocomplete-results.show {
+    display: block;
+}
+
+.resultado-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s;
+}
+
+.resultado-item:hover {
+    background-color: #f8f9fa;
+}
+
+.resultado-item:last-child {
+    border-bottom: none;
+}
+
+.resultado-nombre {
+    font-weight: 600;
+    color: #3f3d56;
+    margin-bottom: 4px;
+}
+
+.resultado-ubicacion {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.resultado-badge {
+    display: inline-block;
+    background-color: #e9ecef;
+    color: #495057;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    margin-top: 4px;
+}
+
+.upload-area {
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.upload-area:hover {
+    background-color: #e9ecef;
+    border-color: #3f3d56;
+}
+
+.upload-button {
+    color: #666;
+}
+
+.upload-button svg {
+    color: #3f3d56;
+}
+
+#preview-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.preview-item {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.preview-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.preview-item img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    display: block;
+}
+
+.remove-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: rgba(255, 59, 48, 0.9);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    font-weight: bold;
+}
+
+.remove-btn:hover {
+    background-color: rgb(255, 59, 48);
+    transform: scale(1.1);
+}
+
+.form-control:focus {
+    border-color: #3f3d56;
+    box-shadow: 0 0 0 0.2rem rgba(63, 61, 86, 0.25);
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // === AUTOCOMPLETADO DE LUGARES ===
+    const busquedaInput = document.getElementById('busqueda-lugar');
+    const resultadosDiv = document.getElementById('resultados-busqueda');
+    const lugarIdInput = document.getElementById('lugar_turistico_id');
+    let timeoutBusqueda;
+
+    busquedaInput.addEventListener('input', function() {
+        clearTimeout(timeoutBusqueda);
+        const query = this.value.trim();
+
+        if (query.length < 3) {
+            resultadosDiv.classList.remove('show');
+            return;
+        }
+
+        timeoutBusqueda = setTimeout(() => {
+            buscarLugares(query);
+        }, 500);
+    });
+
+    async function buscarLugares(query) {
+        try {
+            const response = await fetch(`/inicio/buscar-lugares/?q=${encodeURIComponent(query)}`);
+            const data = await response.json();
+            
+            mostrarResultados(data.lugares);
+        } catch (error) {
+            console.error('Error al buscar lugares:', error);
+        }
+    }
+
+    function mostrarResultados(lugares) {
+        if (lugares.length === 0) {
+            resultadosDiv.innerHTML = '<div class="resultado-item" style="text-align:center;color:#999;">No se encontraron lugares</div>';
+            resultadosDiv.classList.add('show');
+            return;
+        }
+
+        resultadosDiv.innerHTML = '';
+        
+        lugares.forEach(lugar => {
+            const div = document.createElement('div');
+            div.className = 'resultado-item';
+            div.innerHTML = `
+                <div class="resultado-nombre">${lugar.nombre}</div>
+                <div class="resultado-ubicacion">${lugar.ubicacion}</div>
+                ${lugar.id === null ? '<span class="resultado-badge">Nuevo lugar</span>' : ''}
+            `;
+            
+            div.addEventListener('click', () => seleccionarLugar(lugar));
+            resultadosDiv.appendChild(div);
+        });
+
+        resultadosDiv.classList.add('show');
+    }
+
+    function seleccionarLugar(lugar) {
+        busquedaInput.value = lugar.nombre;
+        resultadosDiv.classList.remove('show');
+
+        // Siempre limpiar primero
+        lugarIdInput.value = '';
+        document.getElementById('nuevo_lugar_nombre').value = '';
+        document.getElementById('nuevo_lugar_ubicacion').value = '';
+        document.getElementById('nuevo_lugar_place_id').value = '';
+        document.getElementById('nuevo_lugar_latitud').value = '';
+        document.getElementById('nuevo_lugar_longitud').value = '';
+        document.getElementById('nuevo_lugar_tipos').value = '';
+
+        if (lugar.id) {
+            // Lugar existente en la BD
+            lugarIdInput.value = lugar.id;
+        } else {
+            // Lugar nuevo desde la API
+            document.getElementById('nuevo_lugar_nombre').value = lugar.nombre || '';
+            document.getElementById('nuevo_lugar_ubicacion').value = lugar.ubicacion || '';
+            document.getElementById('nuevo_lugar_place_id').value = lugar.place_id || '';
+            document.getElementById('nuevo_lugar_latitud').value = lugar.latitud || '';
+            document.getElementById('nuevo_lugar_longitud').value = lugar.longitud || '';
+            document.getElementById('nuevo_lugar_tipos').value = JSON.stringify(lugar.tipos || []);
+        }
+
+        // ✅ Debug opcional para verificar que se llenen
+        console.log("Lugar seleccionado:", {
+            id: lugarIdInput.value,
+            nombre: document.getElementById('nuevo_lugar_nombre').value,
+            ubicacion: document.getElementById('nuevo_lugar_ubicacion').value
+        });
+    }
+
+
+    // Cerrar resultados al hacer clic fuera
+    document.addEventListener('click', function(e) {
+        if (!busquedaInput.contains(e.target) && !resultadosDiv.contains(e.target)) {
+            resultadosDiv.classList.remove('show');
+        }
+    });
+
+    // === RADIO BUTTONS FECHA ===
+    const radios = document.querySelectorAll('input[name="actualmente_en_lugar"]');
+    const fechaDiv = document.getElementById('fecha_hora_input');
+    
+    radios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            fechaDiv.style.display = this.value === 'no' ? 'block' : 'none';
+        });
+    });
+    
+    const noRadio = document.querySelector('input[name="actualmente_en_lugar"][value="no"]');
+    if (noRadio && noRadio.checked) {
+        fechaDiv.style.display = 'block';
+    }
+
+    // === MANEJO DE FOTOGRAFÍAS ===
+    const uploadArea = document.getElementById('upload-area');
+    const uploadButton = document.getElementById('upload-button');
+    const inputFotos = document.getElementById('id_fotografias');
+    const previewContainer = document.getElementById('preview-container');
+    let fotosArray = [];
+
+    uploadArea.addEventListener('click', () => inputFotos.click());
+
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = '#3f3d56';
+        uploadArea.style.backgroundColor = '#e9ecef';
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.style.borderColor = '#e0e0e0';
+        uploadArea.style.backgroundColor = '#f8f9fa';
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.style.borderColor = '#e0e0e0';
+        uploadArea.style.backgroundColor = '#f8f9fa';
+        
+        const files = Array.from(e.dataTransfer.files);
+        agregarFotos(files);
+    });
+
+    inputFotos.addEventListener('change', (e) => {
+        const files = Array.from(e.target.files);
+        agregarFotos(files);
+    });
+
+    function agregarFotos(nuevasFiles) {
+        nuevasFiles = nuevasFiles.filter(f => f.type.startsWith('image/'));
+        if (nuevasFiles.length === 0) {
+            alert("Solo se permiten archivos de imagen (JPG, PNG, WEBP).");
+            return;
+        }
+
+        const espacioDisponible = 3 - fotosArray.length;
+        if (nuevasFiles.length > espacioDisponible) {
+            alert(`Solo puedes subir ${espacioDisponible} foto(s) más. Máximo 3 en total.`);
+            nuevasFiles = nuevasFiles.slice(0, espacioDisponible);
+        }
+
+        fotosArray = fotosArray.concat(nuevasFiles);
+        actualizarPreview();
+    }
+
+    function actualizarPreview() {
+        previewContainer.innerHTML = '';
+        uploadButton.style.display = fotosArray.length === 0 ? 'block' : 'none';
+
+        fotosArray.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const div = document.createElement('div');
+                div.className = 'preview-item';
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.alt = file.name;
+                const btnRemove = document.createElement('button');
+                btnRemove.type = 'button';
+                btnRemove.className = 'remove-btn';
+                btnRemove.innerHTML = '×';
+                btnRemove.onclick = () => eliminarFoto(index);
+                div.appendChild(img);
+                div.appendChild(btnRemove);
+                previewContainer.appendChild(div);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function eliminarFoto(index) {
+        fotosArray.splice(index, 1);
+        actualizarPreview();
+    }
+
+    // === ENVÍO DEL FORMULARIO ===
+    document.getElementById('form-resena').addEventListener('submit', function(e) {
+        const dataTransfer = new DataTransfer();
+        fotosArray.forEach(file => dataTransfer.items.add(file));
+        inputFotos.files = dataTransfer.files;
+
+        // Validación del lugar
+        const lugarId = lugarIdInput.value;
+        const nuevoLugarNombre = document.getElementById('nuevo_lugar_nombre').value;
+        
+        if (!lugarId && !nuevoLugarNombre) {
+            e.preventDefault();
+            alert('Debes seleccionar un lugar de la lista');
+            busquedaInput.focus();
+            return;
+        }
+
+        // Validación general de campos
+        let valido = true;
+        document.querySelectorAll('#form-resena .mb-3').forEach(div => {
+            const input = div.querySelector('input, textarea, select');
+            const errorMsg = div.querySelector('.error-msg');
+            
+            if (input && input.offsetParent !== null && input.id !== 'busqueda-lugar') {
+                const tipoRadio = input.type === 'radio' || input.type === 'checkbox';
+                let valorVacio = false;
+
+                if (tipoRadio) {
+                    const name = input.name;
+                    const seleccionado = document.querySelectorAll('input[name="'+name+'"]:checked').length > 0;
+                    if (!seleccionado) valorVacio = true;
+                } else {
+                    if (!input.value.trim()) valorVacio = true;
+                }
+
+                if (valorVacio) {
+                    if (errorMsg) errorMsg.classList.remove('d-none');
+                    input.classList.add('is-invalid');
+                    valido = false;
+                } else {
+                    if (errorMsg) errorMsg.classList.add('d-none');
+                    input.classList.remove('is-invalid');
+                }
+            }
+        });
+
+        if (!valido) e.preventDefault();
+    });
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,203 @@
+{% extends 'base_feed.html' %} 
+{% load static %}
+
+{% block contenido %}
+<div class="container my-4">
+    <h1 class="page-title-feed text-center mb-5"><i class="bi bi-pencil-square me-2"></i> Editar Perfil</h1> 
+
+    {% if messages %}
+        <div class="messages-container my-3">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} text-center d-block" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="card p-5 shadow-lg mx-auto form-edit-card"> 
+        <form method="post" enctype="multipart/form-data" id="form-editar">
+            {% csrf_token %}
+
+            <h3 class="mb-4 text-primary form-section-title">Información de la Cuenta</h3>
+
+            <div class="row mb-4">
+
+                <!-- Username -->
+                <div class="col-md-12 mb-3">
+                    <label class="form-label fw-bold">{{ user_form.username.label }}</label>
+                    {{ user_form.username }}
+                    <small class="text-danger error-msg {% if not user_form.username.errors %}d-none{% endif %}">
+                        {% for e in user_form.username.errors %} {{ e }} {% endfor %}
+                    </small>
+                </div>
+
+                <!-- Nombre -->
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">{{ user_form.first_name.label }}</label>
+                    {{ user_form.first_name }}
+                </div>
+
+                <!-- Apellido -->
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">{{ user_form.last_name.label }}</label>
+                    {{ user_form.last_name }}
+                </div>
+
+                <!-- Email -->
+                <div class="col-md-12 mb-3">
+                    <label class="form-label fw-bold">{{ user_form.email.label }}</label>
+                    {{ user_form.email }}
+                    <small class="text-danger error-msg {% if not user_form.email.errors %}d-none{% endif %}">
+                        {% for e in user_form.email.errors %} {{ e }} {% endfor %}
+                    </small>
+                </div>
+            </div>
+
+            <!-- TURISTA -->
+            <h3 class="mb-4 text-primary mt-4 form-section-title">Detalles del Turista</h3>
+
+            <div class="row mb-4">
+                <div class="col-md-12 mb-4 d-flex align-items-center gap-4 photo-upload-container">
+                    <div class="flex-shrink-0">
+                        <img id="foto-preview" 
+                             src="{% if turista_form.instance.foto_perfil %}{{ turista_form.instance.foto_perfil.url }}{% else %}{% static 'ruta/a/icono_default.png' %}{% endif %}" 
+                             alt="Foto actual" 
+                             class="rounded-circle" 
+                             width="80" height="80" 
+                             style="object-fit: cover; border: 2px solid var(--primary-color);"
+                             data-original="{% if turista_form.instance.foto_perfil %}{{ turista_form.instance.foto_perfil.url }}{% else %}{% static 'ruta/a/icono_default.png' %}{% endif %}">
+                    </div>
+                    <div class="flex-grow-1">
+                        <label for="{{ turista_form.foto_perfil.id_for_label }}" class="form-label fw-bold mb-1">
+                            {{ turista_form.foto_perfil.label }}
+                        </label>
+
+                        {{ turista_form.foto_perfil }}
+
+                        <!-- ⭐ ERROR DINÁMICO PARA ARCHIVOS NO IMAGEN -->
+                        <small id="foto-error"
+                               class="text-danger error-msg {% if not turista_form.foto_perfil.errors %}d-none{% endif %}">
+                            {% for e in turista_form.foto_perfil.errors %} {{ e }} {% endfor %}
+                        </small>
+                    </div>
+                </div>
+            </div> 
+            
+            <div class="mb-4">
+                <label for="{{ turista_form.biografia.id_for_label }}" class="form-label fw-bold">
+                    {{ turista_form.biografia.label }}
+                </label>
+                {{ turista_form.biografia }}
+                <small class="text-danger error-msg {% if not turista_form.biografia.errors %}d-none{% endif %}">
+                    {% for e in turista_form.biografia.errors %} {{ e }} {% endfor %}
+                </small>
+            </div>
+
+            <!-- CONTRASEÑA -->
+            <h3 class="mb-4 text-primary mt-4 form-section-title">Cambiar Contraseña</h3>
+
+            <div class="row mb-4"> 
+
+                <!-- NUEVA CONTRASEÑA -->
+                <div class="col-md-6 mb-3">
+                    <label for="{{ contrasena_form.new_password.id_for_label }}" class="form-label fw-bold">
+                        {{ contrasena_form.new_password.label }}
+                    </label>
+
+                    {{ contrasena_form.new_password }}
+
+                    <small class="text-danger error-msg {% if not contrasena_form.errors %}d-none{% endif %}">
+                        {% for field, errs in contrasena_form.errors.items %}
+                            {% for e in errs %}
+                                {{ e }}<br>
+                            {% endfor %}
+                        {% endfor %}
+                    </small>
+                </div>
+
+                <!-- CONFIRMAR CONTRASEÑA -->
+                <div class="col-md-6 mb-4">
+                    <label for="{{ contrasena_form.confirm_password.id_for_label }}" class="form-label fw-bold">
+                        {{ contrasena_form.confirm_password.label }}
+                    </label>
+                    {{ contrasena_form.confirm_password }}
+                </div>
+
+            </div>
+
+            <div class="d-flex justify-content-end gap-3 mt-4">
+                <a href="{% url 'perfil_usuario' username=request.user.username %}" class="btn btn-outline-secondary px-4">Cancelar</a>
+                <button type="submit" class="btn btn-primary px-4" style="background-color: #3f3d56 !important; 
+                border-color: #3f3d56 !important; background-image: none !important;">Guardar Cambios</button> 
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .form-edit-card .form-section-title {
+        padding-bottom: 5px;
+        border-bottom: 1px solid #eee;
+        margin-top: 2rem;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .error-msg {
+        font-size: 0.85rem;
+        margin-top: 3px;
+    }
+
+    .form-edit-card .form-control {
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        border-color: #e0e0e0;
+    }
+
+    textarea.form-control {
+        min-height: 120px;
+        margin-top: 5px;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    const input = document.getElementById('id_foto_perfil'); 
+    const preview = document.getElementById('foto-preview');
+    const errorMsg = document.getElementById('foto-error');
+
+    if (input) {
+        input.addEventListener('change', function() {
+
+            const file = this.files[0];
+
+            if (!file) {
+                errorMsg.classList.add("d-none");
+                return;
+            }
+
+            // VALIDAR FORMATO
+            if (!file.type.startsWith('image/')) {
+                this.value = ""; 
+                preview.src = preview.dataset.original; 
+                errorMsg.textContent = "Solo se permiten formatos de imagen (JPG, PNG, WEBP).";
+                errorMsg.classList.remove("d-none");
+                return;
+            }
+
+            // SI ES IMAGEN, QUITAR ERROR
+            errorMsg.classList.add("d-none");
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        });
+    }
+
+});
+</script>
+
+{% endblock contenido %}

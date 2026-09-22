@@ -1,0 +1,1560 @@
+:root {
+    --primary-color: #6C63FF;
+    --secondary-color: #FF6584;
+    --bg-gradient: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+    --card-bg: #ffffff;
+    --input-bg: #f0f2f5;
+    --sidebar-color: #3f3d56;
+    --sidebar-text: #ffffff;
+}
+
+body {
+    background: var(--bg-gradient);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* ========== HEADER MÓVIL ========== */
+.mobile-header {
+    display: none;
+    background-color: var(--sidebar-color);
+    color: var(--sidebar-text);
+    padding: 1rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.mobile-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.hamburger-btn {
+    background: none;
+    border: none;
+    color: var(--sidebar-text);
+    font-size: 1.8rem;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+/* ========== SIDEBAR ========== */
+.sidebar {
+    width: 250px;
+    background-color: var(--sidebar-color);
+    color: var(--sidebar-text);
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1rem;
+    box-shadow: 3px 0 15px rgba(0,0,0,0.15);
+    position: fixed;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: 999;
+    transition: transform 0.3s ease;
+}
+
+.sidebar h2 {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    font-weight: 700;
+}
+
+.sidebar a {
+    color: var(--sidebar-text);
+    text-decoration: none;
+    margin-bottom: 1rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--secondary-color);
+}
+
+.sidebar a i {
+    font-size: 1.2rem;
+}
+
+/* ========== OVERLAY ========== */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+}
+
+/* ========== CONTENIDO PRINCIPAL ========== */
+.main-content {
+    margin-left: 250px;
+    padding: 2rem 3rem;
+    min-height: 100vh;
+}
+
+/* ========== TARJETAS ========== */
+.card {
+    background-color: var(--card-bg);
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+}
+
+/* ========== BOTONES ========== */
+.btn-primary {
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    border: none;
+    font-weight: 600;
+    border-radius: 12px;
+    padding: 0.6rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    filter: brightness(1.1);
+}
+
+a.btn-link {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+a.btn-link:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
+}
+
+/* ========== ESTILOS DE PERFIL ========== */
+.page-title {
+    text-align: center;
+    font-weight: 300;
+    color: #333;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 2rem;
+}
+
+.default-profile-icon {
+    font-size: 8rem;
+    color: #ccc;
+    display: block;
+    margin: 0 auto;
+}
+
+.profile-pic {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid var(--primary-color);
+}
+
+/* ========== PUBLICACIONES ========== */
+.publicacion-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+}
+
+.publication-place {
+    font-weight: 600;
+    color: var(--sidebar-color);
+}
+
+.post-image {
+    width: 120px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 6px;
+    transition: transform 0.2s;
+    border: 1px solid #ddd;
+}
+
+.post-image:hover {
+    transform: scale(1.03);
+}
+
+/* ========== BOTONES DE ACCIÓN ========== */
+.delete-btn {
+    border-radius: 5px;
+    font-size: 0.85rem;
+    padding: 3px 8px;
+    transition: background-color 0.2s;
+}
+
+.delete-btn:hover {
+    background-color: var(--secondary-color);
+    color: white !important;
+}
+
+.action-menu-btn {
+    border: none;
+    background: transparent;
+    color: #999;
+    padding: 0 5px;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.action-menu-btn:hover {
+    color: var(--primary-color);
+    background: transparent !important;
+}
+
+.delete-dropdown-item {
+    color: #dc3545;
+    background-color: transparent;
+    border: none;
+    width: 100%;
+    text-align: left;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.delete-dropdown-item:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+.action-menu-floating {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    background-color: rgba(255, 255, 255, 1);
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    padding: 2px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.action-menu-floating .action-menu-btn {
+    color: #3f3d56;
+    padding: 5px 8px;
+    line-height: 1;
+}
+
+.action-menu-floating .action-menu-btn i {
+    font-size: 1.5rem;
+}
+
+.action-menu-floating:hover {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* ========== MEDIA QUERIES ========== */
+
+/* Tablets y dispositivos medianos */
+@media (max-width: 992px) {
+    .main-content {
+        margin-left: 0;
+        padding: 2rem 1.5rem;
+    }
+
+    .sidebar {
+        width: 280px;
+    }
+
+    .profile-pic {
+        width: 120px;
+        height: 120px;
+    }
+
+    .default-profile-icon {
+        font-size: 6rem;
+    }
+}
+
+/* Móviles */
+@media (max-width: 768px) {
+    .mobile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .sidebar {
+        transform: translateX(-100%);
+        width: 280px;
+        padding-top: 5rem;
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 5rem 1rem 2rem 1rem;
+    }
+
+    .card {
+        padding: 1rem;
+        border-radius: 15px;
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+    }
+
+    .profile-pic {
+        width: 100px;
+        height: 100px;
+    }
+
+    .default-profile-icon {
+        font-size: 5rem;
+    }
+
+    .post-image {
+        width: 100%;
+        height: auto;
+        max-height: 200px;
+    }
+}
+
+/* Móviles pequeños */
+@media (max-width: 480px) {
+    .main-content {
+        padding: 5rem 0.5rem 1rem 0.5rem;
+    }
+
+    .card {
+        border-radius: 10px;
+        margin-bottom: 1rem;
+    }
+
+    .btn-primary {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    .sidebar {
+        width: 250px;
+    }
+
+    .mobile-header h2 {
+        font-size: 1.3rem;
+    }
+}
+
+/* ========== ESTILOS DEL FEED ========== */
+.page-title-feed {
+    color: #3f3d56;
+}
+
+.feed-card {
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.feed-card:hover {
+    transform: translateY(-3px);
+}
+
+.profile-img-feed {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+}
+
+.default-icon-feed {
+    font-size: 60px;
+    color: #3f3d56;
+}
+
+.username-feed {
+    color: #3f3d56;
+}
+
+.place-name-feed {
+    color: #6C63FF;
+}
+
+.description-feed {
+    color: #333;
+}
+
+.rating-label {
+    color: #6C63FF;
+}
+
+.rating-value {
+    font-size: 1.2rem;
+    color: #3f3d56;
+}
+
+.btn-like.liked {
+    background-color: #6C63FF;
+    color: #fff;
+    border-color: #6C63FF;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: rgba(108,99,255,0.6);
+    border-radius: 50%;
+}
+
+.carousel-image {
+    border-radius: 15px;
+    object-fit: cover;
+    height: 300px;
+}
+
+.empty-alert {
+    border-radius: 12px;
+}
+
+.carousel-feed {
+    max-width: 100%;
+    overflow: hidden;
+}
+
+/* ========== RESPONSIVE FEED - TABLETS ========== */
+@media (max-width: 992px) {
+    .feed-card {
+        padding: 1.5rem !important;
+    }
+
+    .carousel-image {
+        height: 250px;
+    }
+
+    .default-icon-feed {
+        font-size: 50px;
+    }
+
+    .profile-img-feed {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+/* ========== RESPONSIVE FEED - MÓVILES ========== */
+@media (max-width: 768px) {
+    .page-title-feed {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .feed-card {
+        padding: 1rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    /* En móvil, el carrusel va debajo del contenido */
+    .feed-card .col-md-5 {
+        order: 2;
+        margin-top: 1rem;
+    }
+
+    .feed-card .col-md-7 {
+        order: 1;
+    }
+
+    .carousel-image {
+        height: 250px;
+        border-radius: 12px;
+    }
+
+    .user-header {
+        margin-bottom: 1rem !important;
+    }
+
+    .default-icon-feed {
+        font-size: 45px;
+    }
+
+    .profile-img-feed {
+        width: 45px;
+        height: 45px;
+    }
+
+    .username-feed {
+        font-size: 1rem;
+    }
+
+    .date-feed {
+        font-size: 0.75rem;
+    }
+
+    .place-name-feed {
+        font-size: 1rem;
+    }
+
+    .location-feed {
+        font-size: 0.85rem;
+    }
+
+    .description-feed {
+        font-size: 0.9rem;
+        margin-bottom: 1rem !important;
+    }
+
+    .rating-section {
+        margin-bottom: 1rem !important;
+    }
+
+    .rating-label {
+        font-size: 0.9rem;
+    }
+
+    .rating-value {
+        font-size: 1rem !important;
+    }
+
+    .like-section {
+        flex-wrap: wrap;
+    }
+
+    .btn-like {
+        font-size: 0.85rem;
+    }
+
+    .like-count {
+        font-size: 0.85rem;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 8%;
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+}
+
+/* ========== RESPONSIVE FEED - MÓVILES PEQUEÑOS ========== */
+@media (max-width: 480px) {
+    .page-title-feed {
+        font-size: 1.3rem;
+    }
+
+    .feed-card {
+        padding: 0.75rem !important;
+    }
+
+    .carousel-image {
+        height: 200px;
+        border-radius: 10px;
+    }
+
+    .default-icon-feed {
+        font-size: 40px;
+    }
+
+    .profile-img-feed {
+        width: 40px;
+        height: 40px;
+    }
+
+    .username-feed {
+        font-size: 0.95rem;
+    }
+
+    .place-name-feed {
+        font-size: 0.95rem;
+    }
+
+    .description-feed {
+        font-size: 0.85rem;
+    }
+
+    .rating-value {
+        font-size: 0.95rem !important;
+    }
+
+    .btn-like {
+        padding: 0.4rem 0.6rem;
+    }
+
+    .like-text {
+        display: none;
+    }
+
+    .empty-alert {
+        font-size: 0.9rem;
+        padding: 1rem;
+    }
+}
+
+/* ========== ESTILOS DEL PERFIL ========== */
+.profile-header {
+    background: linear-gradient(135deg, rgba(108,99,255,0.1), rgba(255,101,132,0.1));
+    border-radius: 20px;
+}
+
+.username {
+    color: #3f3d56;
+    font-weight: 600;
+}
+
+.profile-divider {
+    border-top: 2px solid #e0e0e0;
+}
+
+.section-title {
+    color: #3f3d56;
+    font-weight: 600;
+}
+
+.profile-publication-card {
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+    position: relative;
+}
+
+.profile-publication-card:hover {
+    transform: translateY(-3px);
+}
+
+.location-icon {
+    color: #FF6584;
+}
+
+.location-subtitle {
+    font-size: 0.9rem;
+    margin-top: 0.25rem;
+}
+
+.publication-description {
+    color: #333;
+    line-height: 1.6;
+}
+
+.rating-label-profile {
+    color: #6C63FF;
+}
+
+.rating-value-profile {
+    font-size: 1.2rem;
+    color: #3f3d56;
+}
+
+.publication-meta {
+    font-size: 0.85rem;
+}
+
+/* Menú de 3 puntos - POSICIONAMIENTO CORREGIDO */
+.profile-action-menu {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+}
+
+.profile-menu-btn {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    padding: 8px 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    color: #3f3d56;
+    transition: all 0.2s ease;
+}
+
+.profile-menu-btn:hover {
+    background: rgba(108,99,255,0.2);
+    transform: scale(1.05);
+}
+
+.profile-menu-btn i {
+    font-size: 1.3rem;
+}
+
+.profile-dropdown {
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Carrusel del perfil */
+.profile-carousel {
+    margin-top: 0.5rem;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.profile-carousel-img {
+    border-radius: 15px;
+    object-fit: cover;
+    object-position: center;
+    height: 300px;
+}
+
+.profile-carousel-arrow {
+    background-color: rgba(108,99,255,0.6);
+    border-radius: 50%;
+}
+
+.profile-empty-alert {
+    border-radius: 12px;
+}
+
+/* ========== RESPONSIVE PERFIL - TABLETS ========== */
+@media (max-width: 992px) {
+    .profile-publication-card {
+        padding: 1.5rem !important;
+    }
+
+    .profile-carousel-img {
+        height: 250px;
+    }
+
+    .profile-pic {
+        width: 120px;
+        height: 120px;
+    }
+
+    .default-profile-icon {
+        font-size: 7rem;
+    }
+
+    .username {
+        font-size: 1.5rem;
+    }
+}
+
+/* ========== RESPONSIVE PERFIL - MÓVILES ========== */
+@media (max-width: 768px) {
+    .profile-header {
+        padding: 2rem 1rem !important;
+        margin-bottom: 2rem !important;
+    }
+
+    .profile-pic {
+        width: 100px;
+        height: 100px;
+    }
+
+    .default-profile-icon {
+        font-size: 6rem;
+    }
+
+    .username {
+        font-size: 1.3rem;
+    }
+
+    .section-title {
+        font-size: 1.3rem;
+    }
+
+    .profile-publication-card {
+        padding: 1rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    /* Reordenar columnas en móvil */
+    .profile-carousel-col {
+        order: 2;
+        margin-top: 1rem;
+    }
+
+    .profile-info-col {
+        order: 1;
+    }
+
+    /* Ajustar el menú de 3 puntos para móvil */
+    .profile-action-menu {
+        top: 5px;
+        right: 5px;
+    }
+
+    .profile-menu-btn {
+        padding: 6px 10px;
+    }
+
+    .profile-menu-btn i {
+        font-size: 1.2rem;
+    }
+
+    .profile-carousel-img {
+        height: 250px;
+        border-radius: 12px;
+    }
+
+    .publication-place {
+        font-size: 1rem;
+    }
+
+    .location-subtitle {
+        font-size: 0.8rem;
+    }
+
+    .publication-description {
+        font-size: 0.9rem;
+    }
+
+    .rating-label-profile {
+        font-size: 0.9rem;
+    }
+
+    .rating-value-profile {
+        font-size: 1rem !important;
+    }
+
+    .publication-meta {
+        font-size: 0.75rem;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 8%;
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+}
+
+/* ========== RESPONSIVE PERFIL - MÓVILES PEQUEÑOS ========== */
+@media (max-width: 480px) {
+    .profile-header {
+        padding: 1.5rem 0.5rem !important;
+    }
+
+    .profile-pic {
+        width: 80px;
+        height: 80px;
+    }
+
+    .default-profile-icon {
+        font-size: 5rem;
+    }
+
+    .username {
+        font-size: 1.2rem;
+    }
+
+    .section-title {
+        font-size: 1.1rem;
+    }
+
+    .profile-publication-card {
+        padding: 0.75rem !important;
+    }
+
+    .profile-carousel-img {
+        height: 200px;
+        border-radius: 10px;
+    }
+
+    .profile-menu-btn {
+        padding: 5px 8px;
+    }
+
+    .profile-menu-btn i {
+        font-size: 1.1rem;
+    }
+
+    .publication-place {
+        font-size: 0.95rem;
+    }
+
+    .publication-description {
+        font-size: 0.85rem;
+    }
+
+    .rating-value-profile {
+        font-size: 0.95rem !important;
+    }
+
+    .publication-meta {
+        font-size: 0.7rem;
+    }
+
+    .profile-empty-alert {
+        font-size: 0.9rem;
+        padding: 1rem;
+    }
+}
+
+/* ========== ESTILOS DE AUTENTICACIÓN (LOGIN Y REGISTRO) ========== */
+
+/* Body específico para páginas de autenticación */
+.auth-body {
+    background: var(--bg-gradient);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Navbar y Footer de autenticación */
+.auth-navbar, .auth-footer {
+    background-color: var(--sidebar-color);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    border-radius: 12px;
+}
+
+.auth-brand, .auth-footer small {
+    color: var(--sidebar-text);
+    font-weight: 700;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+}
+
+.auth-brand:hover {
+    color: var(--secondary-color);
+}
+
+.auth-footer {
+    margin-top: auto;
+    padding: 1.2rem 0;
+}
+
+/* Contenido central */
+.auth-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem 1rem;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 450px;
+    padding: 3rem;
+    background-color: var(--card-bg);
+    border-radius: 25px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    transition: all 0.4s ease;
+}
+
+.auth-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+}
+
+.auth-title {
+    color: #3f3d56;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.auth-section-title {
+    color: #3f3d56;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+/* Inputs y formularios */
+.auth-input, .auth-field-wrapper input, .auth-field-wrapper select, .auth-field-wrapper textarea {
+    background-color: var(--input-bg);
+    border-radius: 15px;
+    padding: 0.8rem 1rem;
+    border: 1px solid #e0e0e0;
+    box-shadow: inset 0 3px 8px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.auth-input:focus, .auth-field-wrapper input:focus, .auth-field-wrapper select:focus, .auth-field-wrapper textarea:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 10px rgba(108,99,255,0.25);
+    outline: none;
+}
+
+.auth-label {
+    color: #3f3d56;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.auth-field-wrapper {
+    margin-bottom: 0.5rem;
+}
+
+/* Botón de submit */
+.auth-btn-submit {
+    background-color: #3f3d56;
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 0.8rem;
+    font-weight: 600;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+    border: none;
+    width: 100%;
+}
+
+.auth-btn-submit:hover {
+    transform: translateY(-2px);
+    background-color: var(--primary-color);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* Links */
+.auth-link {
+    color: #3f3d56;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-weight: 500;
+}
+
+.auth-link:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
+}
+
+/* Alertas */
+.auth-alert {
+    border-radius: 10px;
+    font-size: 0.9rem;
+}
+
+/* Errores */
+.auth-error {
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+/* Contenedores específicos */
+.login-container, .register-container {
+    width: 100%;
+}
+
+/* ========== RESPONSIVE AUTENTICACIÓN - TABLETS ========== */
+@media (max-width: 992px) {
+    .auth-card {
+        max-width: 500px;
+        padding: 2.5rem;
+    }
+
+    .auth-content {
+        padding: 2rem 1rem;
+    }
+}
+
+/* ========== RESPONSIVE AUTENTICACIÓN - MÓVILES ========== */
+@media (max-width: 768px) {
+    .auth-content {
+        padding: 1.5rem 1rem;
+        align-items: flex-start;
+        padding-top: 2rem;
+    }
+
+    .auth-card {
+        max-width: 100%;
+        padding: 2rem 1.5rem;
+        border-radius: 20px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    }
+
+    .auth-card:hover {
+        transform: none;
+    }
+
+    .auth-title {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .auth-section-title {
+        font-size: 1.1rem;
+        margin-top: 1rem;
+    }
+
+    .auth-navbar {
+        border-radius: 0;
+        margin-bottom: 0 !important;
+    }
+
+    .auth-footer {
+        border-radius: 0;
+        padding: 1rem 0;
+    }
+
+    .auth-footer small {
+        font-size: 0.8rem;
+    }
+
+    .auth-brand {
+        font-size: 1.3rem !important;
+    }
+
+    .auth-input, .auth-field-wrapper input, .auth-field-wrapper select, .auth-field-wrapper textarea {
+        padding: 0.7rem 0.9rem;
+        font-size: 0.95rem;
+    }
+
+    .auth-btn-submit {
+        padding: 0.7rem;
+        font-size: 0.95rem;
+    }
+
+    .auth-label {
+        font-size: 0.9rem;
+    }
+
+    .auth-link {
+        font-size: 0.9rem;
+    }
+}
+
+/* ========== RESPONSIVE AUTENTICACIÓN - MÓVILES PEQUEÑOS ========== */
+@media (max-width: 480px) {
+    .auth-content {
+        padding: 1rem 0.5rem;
+    }
+
+    .auth-card {
+        padding: 1.5rem 1rem;
+        border-radius: 15px;
+    }
+
+    .auth-title {
+        font-size: 1.3rem;
+    }
+
+    .auth-section-title {
+        font-size: 1rem;
+    }
+
+    .auth-brand {
+        font-size: 1.2rem !important;
+    }
+
+    .auth-input, .auth-field-wrapper input, .auth-field-wrapper select, .auth-field-wrapper textarea {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.9rem;
+        border-radius: 12px;
+    }
+
+    .auth-btn-submit {
+        padding: 0.65rem;
+        font-size: 0.9rem;
+        border-radius: 10px;
+    }
+
+    .auth-label {
+        font-size: 0.85rem;
+    }
+
+    .auth-link {
+        font-size: 0.85rem;
+    }
+
+    .auth-alert {
+        font-size: 0.85rem;
+        padding: 0.75rem;
+    }
+
+    .auth-error {
+        font-size: 0.8rem;
+    }
+}
+
+/* ========== ESTILOS DEL FORMULARIO DE PUBLICACIÓN ========== */
+.publish-title {
+    color: #3f3d56;
+    font-weight: 700;
+}
+
+.publish-card {
+    border-radius: 20px;
+    background: #fff;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.publish-label {
+    color: #3f3d56;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.publish-icon-location {
+    color: #FF6584;
+}
+
+.publish-icon-pencil,
+.publish-icon-clock,
+.publish-icon-image {
+    color: #6C63FF;
+}
+
+.publish-icon-calendar {
+    color: #FF6584;
+}
+
+.publish-card .form-control,
+.publish-card .form-select {
+    background-color: var(--input-bg);
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+.publish-card .form-control:focus,
+.publish-card .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 10px rgba(108,99,255,0.2);
+    background-color: #fff;
+}
+
+.publish-card textarea.form-control {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.publish-radio-group {
+    display: flex;
+    gap: 2rem;
+    margin-top: 0.5rem;
+}
+
+.publish-radio-label {
+    font-weight: 500;
+    color: #555;
+    cursor: pointer;
+}
+
+.publish-radio-label input[type="radio"] {
+    margin-right: 0.5rem;
+    cursor: pointer;
+}
+
+.publish-error {
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+.publish-help-text {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.publish-alert {
+    border-radius: 12px;
+    max-width: 800px;
+    margin: 0 auto 1.5rem;
+}
+
+.publish-general-error {
+    border-radius: 10px;
+}
+
+/* Área de carga de archivos */
+.upload-area {
+    border: 2px dashed #e0e0e0;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.upload-area:hover {
+    background-color: #e9ecef;
+    border-color: #3f3d56;
+}
+
+.upload-area-dragover {
+    background-color: #e9ecef;
+    border-color: #3f3d56;
+}
+
+.upload-button {
+    color: #666;
+}
+
+.upload-icon {
+    color: #3f3d56;
+}
+
+.upload-text {
+    color: #3f3d56;
+    font-weight: 500;
+}
+
+.upload-subtext {
+    color: #666;
+}
+
+/* Contenedor de previews */
+#preview-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.preview-item {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.preview-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.preview-item img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    display: block;
+}
+
+.remove-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: rgba(255, 59, 48, 0.9);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    font-weight: bold;
+}
+
+.remove-btn:hover {
+    background-color: rgb(255, 59, 48);
+    transform: scale(1.1);
+}
+
+/* Botones de acción */
+.publish-actions {
+    margin-top: 2rem;
+}
+
+.publish-btn-cancel {
+    border-radius: 12px;
+    padding: 0.6rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.publish-btn-submit {
+    background-color: #3f3d56;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 0.6rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.publish-btn-submit:hover {
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+
+/* ========== RESPONSIVE PUBLICACIÓN - TABLETS ========== */
+@media (max-width: 992px) {
+    .publish-card {
+        max-width: 100%;
+        padding: 2rem !important;
+    }
+
+    .preview-item img {
+        height: 120px;
+    }
+
+    #preview-container {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+}
+
+/* ========== RESPONSIVE PUBLICACIÓN - MÓVILES ========== */
+@media (max-width: 768px) {
+    .publish-title {
+        font-size: 1.5rem;
+    }
+
+    .publish-card {
+        padding: 1.5rem !important;
+        border-radius: 15px;
+    }
+
+    .publish-label {
+        font-size: 0.95rem;
+    }
+
+    .publish-card .form-control,
+    .publish-card .form-select {
+        padding: 0.65rem 0.85rem;
+        font-size: 0.95rem;
+    }
+
+    .publish-radio-group {
+        gap: 1.5rem;
+    }
+
+    .publish-actions {
+        flex-direction: column;
+        gap: 0.75rem !important;
+    }
+
+    .publish-btn-cancel,
+    .publish-btn-submit {
+        width: 100%;
+    }
+
+    .upload-area {
+        padding: 1.5rem;
+    }
+
+    .upload-icon {
+        width: 35px;
+        height: 35px;
+    }
+
+    .upload-text {
+        font-size: 0.95rem;
+    }
+
+    .upload-subtext {
+        font-size: 0.8rem;
+    }
+
+    #preview-container {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 10px;
+    }
+
+    .preview-item img {
+        height: 100px;
+    }
+
+    .remove-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 16px;
+    }
+}
+
+/* ========== RESPONSIVE PUBLICACIÓN - MÓVILES PEQUEÑOS ========== */
+@media (max-width: 480px) {
+    .publish-title {
+        font-size: 1.3rem;
+    }
+
+    .publish-card {
+        padding: 1rem !important;
+        border-radius: 12px;
+    }
+
+    .publish-label {
+        font-size: 0.9rem;
+    }
+
+    .publish-label i {
+        font-size: 0.9rem;
+    }
+
+    .publish-card .form-control,
+    .publish-card .form-select {
+        padding: 0.6rem 0.75rem;
+        font-size: 0.9rem;
+        border-radius: 10px;
+    }
+
+    .publish-card textarea.form-control {
+        min-height: 100px;
+    }
+
+    .publish-radio-group {
+        gap: 1rem;
+        font-size: 0.9rem;
+    }
+
+    .publish-btn-cancel,
+    .publish-btn-submit {
+        padding: 0.55rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .upload-area {
+        padding: 1.25rem;
+    }
+
+    .upload-icon {
+        width: 30px;
+        height: 30px;
+    }
+
+    .upload-text {
+        font-size: 0.9rem;
+    }
+
+    .upload-subtext {
+        font-size: 0.75rem;
+    }
+
+    #preview-container {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    }
+
+    .preview-item img {
+        height: 80px;
+    }
+
+    .remove-btn {
+        width: 26px;
+        height: 26px;
+        font-size: 15px;
+        top: 5px;
+        right: 5px;
+    }
+
+    .publish-alert {
+        font-size: 0.85rem;
+        padding: 0.75rem;
+    }
+
+    .publish-help-text {
+        font-size: 0.8rem;
+    }
+}
